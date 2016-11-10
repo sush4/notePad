@@ -9,14 +9,13 @@
 import UIKit
 
 class DetailViewController: UIViewController {
-
-    @IBOutlet weak var detailDescriptionLabel: UILabel!
-
+    
+    @IBOutlet weak var detailDescription: UITextView!
 
     func configureView() {
         // Update the user interface for the detail item.
         if let detail = self.detailItem {
-            if let label = self.detailDescriptionLabel {
+            if let label = self.detailDescription {
                 label.text = detail.timestamp!.description
             }
         }

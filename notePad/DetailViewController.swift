@@ -67,7 +67,7 @@ class DetailViewController: UIViewController,NSFetchedResultsControllerDelegate 
         
         // Edit the section name key path and cache name if appropriate.
         // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "Master")
+        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: nil)
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
         
@@ -84,11 +84,12 @@ class DetailViewController: UIViewController,NSFetchedResultsControllerDelegate 
     }
     
     func saveObject(_ sender : Any) {
-        let context = self.fetchedResultsController.managedObjectContext
-        let newEvent = Event(context: context)
         
-        // If appropriate, configure the new managed object.
-        newEvent.timestamp = detailDescription.text!
+        if let detail = self.detailItem{
+            detail.timestamp! = self.detailDescription.text!
+        }
+        
+        let context = self.fetchedResultsController.managedObjectContext;
         
         // Save the context.
         do {

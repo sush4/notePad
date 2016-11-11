@@ -43,7 +43,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         let newEvent = Event(context: context)
              
         // If appropriate, configure the new managed object.
-        newEvent.timestamp = NSDate()
+        newEvent.timestamp = "test"
 
         // Save the context.
         do {
@@ -114,6 +114,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
 
     // MARK: - Fetched results controller
+    var _fetchedResultsController: NSFetchedResultsController<Event>? = nil
 
     var fetchedResultsController: NSFetchedResultsController<Event> {
         if _fetchedResultsController != nil {
@@ -147,7 +148,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         return _fetchedResultsController!
     }    
-    var _fetchedResultsController: NSFetchedResultsController<Event>? = nil
+    
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableView.beginUpdates()

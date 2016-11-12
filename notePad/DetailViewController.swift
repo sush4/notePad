@@ -49,6 +49,8 @@ class DetailViewController: UIViewController,NSFetchedResultsControllerDelegate 
         }
     }
     
+    var masterViewController : MasterViewController?
+    
     var _fetchedResultsController: NSFetchedResultsController<Event>? = nil
     var fetchedResultsController: NSFetchedResultsController<Event> {
         if _fetchedResultsController != nil {
@@ -94,6 +96,7 @@ class DetailViewController: UIViewController,NSFetchedResultsControllerDelegate 
         // Save the context.
         do {
             try context.save()
+            masterViewController!.didFinishTask()
         } catch {
             // Replace this implementation with code to handle the error appropriately.
             // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.

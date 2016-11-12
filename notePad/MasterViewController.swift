@@ -9,11 +9,21 @@
 import UIKit
 import CoreData
 
-class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+
+protocol DetailViewControllerDelegate: class {
+    func didFinishTask()
+}
+
+class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate ,DetailViewControllerDelegate {
+    
+    internal func didFinishTask() {
+        self.tableView.reloadData();
+    }
+
 
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
-
+    var newEvent: Event?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,11 +50,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     func insertNewObject(_ sender: Any) {
         let context = self.fetchedResultsController.managedObjectContext
-        let newEvent = Event(context: context)
-             
-        // If appropriate, configure the new managed object.
-        newEvent.timestamp = "test"
-
+        
+        newEvent = Event(context: context)
+        newEvent?.timestamp = "Empty Note"
+//        [self.fetchedResultsController addObject:newFlight];
+        
         // Save the context.
         do {
             try context.save()
@@ -54,19 +64,27 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             let nserror = error as NSError
             fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
         }
+        self.performSegue(withIdentifier: "showDetail", sender: sender)
+        
     }
 
     // MARK: - Segues
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
+            
+            let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+            
             if let indexPath = self.tableView.indexPathForSelectedRow {
-            let object = self.fetchedResultsController.object(at: indexPath)
-                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+                let object = self.fetchedResultsController.object(at: indexPath)
                 controller.detailItem = object
-                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
-                controller.navigationItem.leftItemsSupplementBackButton = true
+            } else {
+                controller.detailItem = newEvent
             }
+            
+            controller.masterViewController = self
+            controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
         }
     }
 
